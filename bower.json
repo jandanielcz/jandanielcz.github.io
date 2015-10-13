@@ -1,0 +1,20 @@
+{
+  "name": "jandanielcz.github.io",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jandanielcz/jandanielcz.github.io",
+  "authors": [
+    "Jan Daniel <dan@utio.cz>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

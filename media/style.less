@@ -1,0 +1,120 @@
+body {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0px; padding: 0px;
+
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
+.status {
+    position: absolute;
+    bottom: 5px; right: 5px;
+    padding: 4px 2em;
+    width: auto;
+    text-align: right;
+    color: white;
+    font-size: 28px;
+
+    strong {
+        font-size: 130%;
+        color: #888;
+    }
+
+}
+
+#Sites {
+    > div //group
+    {
+        position: relative;
+        background: #e0e0e0;
+        margin: 4px;
+        padding: 4px;
+
+        &:after {
+            content:"";
+            display:table;
+            clear:both;
+        }
+
+        > h3 {
+            color: #aaa;
+            font-size: 10px;
+            margin-top: 0px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+    }
+
+    a // site link
+    {
+        display: block; text-align: center;
+        float: left;
+        margin: 0px 16px 16px 0px;
+        height: 96px;
+        box-shadow: #999 4px 4px 4px;
+        border-radius: 12px;
+        background-color: white;
+        border: 1px solid #fff;
+
+        &:hover {
+            box-shadow: #777 5px 5px 5px;
+        }
+
+        > img {
+            display: block;
+            margin: 0px auto;
+            max-width: 96px;
+            border-radius: 12px;
+        }
+    }
+
+    span // folder
+    {
+        display: block;
+        float: left;
+        background: url('folder-closed.png') 12px 5px no-repeat;
+        padding-top: 96px;
+        width: 96px; height: 0px;
+        overflow-y: hidden;
+        margin: 0px 16px 16px 0px;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
+
+        &:after {
+            content:"";
+            display:table;
+            clear:both;
+        }
+
+        &.open {
+            background-image: url('folder-open.png');
+            overflow-y: visible;
+
+            > a {
+                display: block;
+            }
+        }
+
+        > a {
+            display: none;
+
+        }
+
+        h3 {
+            width: 100%;
+            font-size: 11px;
+            font-weight: 400;
+            color: #555;
+            position: absolute;
+            top: 64px; left: 0px;
+            text-align: center;
+        }
+
+    }
+
+}

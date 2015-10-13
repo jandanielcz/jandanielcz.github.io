@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="cs">
+    <head>
+        <meta charset="UTF-8">
+        <title>Start</title>
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="media/style.css">
+        <link rel="icon" href="media/home.png">
+
+        <script>
+            function enhanceUrl(url) {
+
+                var centerRegex = new RegExp('\/\/([A-Za-z0-9\.\_\-]*?)\/');
+                var match = centerRegex.exec(url);
+
+                if(match === null) {
+                    return url;
+                }
+
+                return url.replace(match[1], '<strong>' + match[1] + '</strong>');
+            }
+
+            function init(){
+                $(document).ready(function(){
+                    var sitesBox = $('#Sites');
+
+                    // links to new tab
+                    sitesBox.find('a').attr('target', '_blank');
+
+                    //folder operations
+                    sitesBox.find('span').on('click', function(e){
+                        sitesBox.find('span').not(this).removeClass('open');
+                        $(this).toggleClass('open');
+                    });
+
+                    //links without icon
+                    sitesBox.on('error', 'img', function(e){
+                        $(this).attr('src', 'media/link.png');
+                    });
+
+                    //link hover effect
+                    sitesBox.find('> div').each(function(){
+                        $(this).append('<div class="status"></div>');
+                    });
+                    sitesBox.on('mouseenter', 'a', function(e){
+                        $(this).closest('div').find('.status').html(enhanceUrl($(this).attr('href')));
+                    });
+                    sitesBox.on('mouseleave', 'a', function(e){
+                        $('.status').html('');
+                    });
+
+                });
+            }
+        </script>
+        <script src="bower_components/jquery/dist/jquery.min.js" async onload="init();"></script>
+    </head>
+    <body>
+        <div id="Wrapper">
+            <div id="Sites">
+
+                <div>
+                    <h3>Hlavní</h3>
+                    <a href="https://inbox.google.com/u/0/">
+                        <img src="images/inbox.png">
+                    </a>
+                    <a href="https://inbox.google.com/u/1/">
+                        <img src="images/inbox-utio.png">
+                    </a>
+                    <a href="https://messenger.com/">
+                        <img src="images/messenger.png">
+                    </a>
+                    <a href="http://fnx.cz/">
+                        <img src="images/fnx.png">
+                    </a>
+                    <a href="http://www.deviantart.com/notifications/">
+                        <img src="images/deviantart.png">
+                    </a>
+                    <a href="https://www.twitter.com/">
+                        <img src="images/twitter.png">
+                    </a>
+                    <span>
+                        <h3>Focení</h3>
+                        <a href="http://fotopatracka.cz/">
+                            <img src="images/fotopatracka.png">
+                        </a>
+                        <a href="http://www.fotoparta.cz/">
+                            <img src="images/fotoparta.png">
+                        </a>
+                    </span>
+                </div>
+                <div>
+                    <h3>Novinky</h3>
+                    <a href="http://www.lupa.cz/">
+                        <img src="images/lupa.png">
+                    </a>
+                    <a href="http://www.root.cz/">
+                        <img src="images/root.png">
+                    </a>
+                    <span>
+                        <h3>Ostatní</h3>
+                        <a href="http://www.d-fens.cz/">
+                            <img src="images/d-fens.png">
+                        </a>
+                        <a href="http://www.fffilm.name/">
+                            <img src="images/fffilm.png">
+                        </a>
+                        <a href="http://www.pooh.cz/">
+                            <img src="images/pooh.png">
+                        </a>
+                    </span>
+                    <span>
+                        <h3>Konspirátoři</h3>
+                        <a href="http://www.ac24.cz/">
+                            <img src="images/ac24.png" alt="AC24">
+                        </a>
+                    </span>
+                </div>
+                <div>
+                    <h3>Byznys</h3>
+                    <a href="https://papertrailapp.com/">
+                        <img src="images/papertrail.png" alt="Papertrail">
+                    </a>
+                    <a href="https://rpm.newrelic.com/accounts/1026004/servers">
+                        <img src="images/newrelic.png" alt="NewRelic">
+                    </a>
+                    <a href="https://mailgun.com/app/dashboard">
+                        <img src="images/mailgun.png" alt="Mailgun">
+                    </a>
+                    <a href="https://github.com/">
+                        <img src="images/github.png">
+                    </a>
+                    <a href="https://bitbucket.com/">
+                        <img src="images/bitbucket.png">
+                    </a>
+                    <a href="https://client.wedos.com/home/">
+                        <img src="images/wedos.png">
+                    </a>
+                </div>
+                <div>
+                    <h3>Peníze</h3>
+                    <a href="https://ob.sberbankcz.cz/VBCZIBS32/ControllerServlet">
+                        <img src="images/sberbank.png">
+                    </a>
+                    <a href="https://ib.airbank.cz/?0">
+                        <img src="images/airbank.png">
+                    </a>
+                </div>
+                <div>
+                    <h3>Dokumenty</h3>
+                </div>
+
+            </div>
+
+        </div>
+    </body>
+</html>
