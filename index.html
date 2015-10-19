@@ -28,13 +28,13 @@
                     sitesBox.find('a').attr('target', '_blank');
 
                     //folder operations
-                    sitesBox.find('span').on('click', function(e){
+                    sitesBox.find('span').on('click', function(){
                         sitesBox.find('span').not(this).removeClass('open');
                         $(this).toggleClass('open');
                     });
 
                     //links without icon
-                    sitesBox.on('error', 'img', function(e){
+                    sitesBox.on('error', 'img', function(){
                         $(this).attr('src', 'media/link.png');
                     });
 
@@ -42,10 +42,10 @@
                     sitesBox.find('> div').each(function(){
                         $(this).append('<div class="status"></div>');
                     });
-                    sitesBox.on('mouseenter', 'a', function(e){
+                    sitesBox.on('mouseenter', 'a', function(){
                         $(this).closest('div').find('.status').html(enhanceUrl($(this).attr('href')));
                     });
-                    sitesBox.on('mouseleave', 'a', function(e){
+                    sitesBox.on('mouseleave', 'a', function(){
                         $('.status').html('');
                     });
 
@@ -120,7 +120,7 @@
                 </div>
                 <div>
                     <h3>Byznys</h3>
-                    <a href="https://paracant.utio.cz/">
+                    <a href="https://pracant.utio.cz/">
                         <img src="images/pracant.png">
                     </a>
                     <a href="https://papertrailapp.com/">
