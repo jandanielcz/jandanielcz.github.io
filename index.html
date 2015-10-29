@@ -41,7 +41,7 @@
                     addItemStorage(categoryId, link);
                 }
                 var md5link = md5(link);
-                var htmlLink = '<a href="'+link+'"><img src="http://www.gravatar.com/avatar/'+md5link+'?d=retro"></a>';
+                var htmlLink = '<a href="'+link+'"><img src="http://www.gravatar.com/avatar/'+md5link+'?d=retro&s=96"></a>';
                 $('#'+categoryId).append(htmlLink)
                                  .find('a').attr('target', '_blank');
             }
