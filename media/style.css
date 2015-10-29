@@ -102,3 +102,6 @@ body {
   left: 0px;
   text-align: center;
 }
+.hidden {
+  display: none!important;
+}
