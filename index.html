@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Start</title>
-        <script src="bower_components/js-md5/src/md5.js"></script>
+        <link rel="stylesheet" href="bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.css">
         <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="media/style.css">
         <link rel="icon" href="media/home.png">
@@ -23,7 +23,7 @@
                 return url.replace(match[1], '<strong>' + match[1] + '</strong>');
             }
 
-            function addItemStorage(categoryId, link){
+            function addItemStorage(categoryId, link, title){
 
                 var items = {};
                 if( localStorage.getItem( storage ) !== null ){
@@ -32,18 +32,38 @@
                 if( typeof items[categoryId] === 'undefined'){
                     items[categoryId] = [];
                 }
-                items[categoryId].push(link);
+                var item = {"url":link,
+                            "title":title};
+                items[categoryId].push(item);
                 localStorage.setItem( storage, JSON.stringify(items) );
             }
 
-            function addItem(categoryId, link, StoreVals){
+            function addItem(categoryId, link, title, StoreVals){
                 if( StoreVals === true ){
-                    addItemStorage(categoryId, link);
+                    addItemStorage(categoryId, link, title);
                 }
+
                 var md5link = md5(link);
-                var htmlLink = '<a href="'+link+'"><img src="http://www.gravatar.com/avatar/'+md5link+'?d=retro&s=96"></a>';
+                var htmlLink = '<a href="'+link+'" data-title="'+title+'" data-link="'+link+'" class="localLink">'
+                        +'<img src="http://www.gravatar.com/avatar/'+md5link+'?d=retro&s=96"></a>';
                 $('#'+categoryId).append(htmlLink)
                                  .find('a').attr('target', '_blank');
+            }
+
+            function deleteLink(categoryId, Link){
+                var items = JSON.parse( localStorage.getItem( storage ) );
+                console.log(items);
+                for( var item in items[categoryId] ){
+                    if( items[categoryId].hasOwnProperty(item) ){
+                        if( items[categoryId][item]["url"] == Link){
+                            items[categoryId].splice(item,1);
+                            $('#'+categoryId).find("a[data-link=\""+Link+"\"]").remove();
+                        }
+                    }
+
+                }
+                localStorage.setItem( storage, JSON.stringify(items) );
+                console.log( JSON.stringify(items));
             }
 
             function loadLocals(){
@@ -55,7 +75,7 @@
                         for( var link in items[item] ){
                             if( items[item].hasOwnProperty( link )){
                                 console.log( [item, link]);
-                                addItem( item, items[item][link], false );
+                                addItem( item, items[item][link]["url"], items[item][link]["title"], false );
                             }
                         }
                     }
@@ -88,14 +108,21 @@
 
 
                     sitesBox.find("> div").mouseenter( function(){
-                        console.log("ths");
-                            $(this).find('.status').html('<a class="addLocal"><img src="images/plus.png"></a>' );
+                        $(this).find('.status').html('<a class="addLocal"><img src="images/plus.png"></a>' );
                     }).mouseleave( function(){
                         $('.status').html('');
                     });
 
                     sitesBox.on('mouseenter', 'a', function(){
-                        $(this).closest('div').find('.status').html(enhanceUrl($(this).attr('href')));
+                        var titLength = 0;
+                        if( typeof $(this).data("title") !== 'undefined'){
+                            titLength = $(this).data("title").length;
+                        }
+                        if( titLength > 0 ){
+                            $(this).closest('div').find('.status').html($(this).data("title"));
+                        } else {
+                            $(this).closest('div').find('.status').html(enhanceUrl($(this).attr('href')));
+                        }
                     });
                     sitesBox.on('mouseleave', 'a', function(){
                         $(this).closest('div').trigger("mouseenter");
@@ -116,23 +143,39 @@
                         e.preventDefault();
                         console.log($(this).closest("div").data('categoryId'));
 
-                        addItem($(this).closest("div").data('categoryId'),$(".newItem input").val(), true);
+                        addItem($(this).closest("div").data('categoryId'),$(".newItem #url").val(),$(".newItem #title").val(), true);
                         $('.newItem').addClass('hidden');
                     });
                     loadLocals();
+
+                    $.contextMenu({
+                        selector: '.localLink',
+                        callback: function(key, options) {
+                            deleteLink($(this).closest('.category').attr("id"),$(this).data("link"));
+                        },
+                        items: {
+                            "delete": {name: "Delete", icon: "delete"}
+                        }
+                    });
 
 
                 });
             }
         </script>
         <script src="bower_components/jquery/dist/jquery.min.js" async onload="init();"></script>
+        <script src="bower_components/js-md5/src/md5.js" async></script>
+        <script src="bower_components/jQuery-contextMenu/dist/jquery.contextMenu.min.js" async></script>
+
     </head>
     <body>
         <div id="Wrapper">
             <div class="newItem hidden">
                 <form onsubmit="false">
                     <h2>New item for category: <span></span></h2>
-                    <input type="text"><button value="add">Add</button>
+                    <label for="url">Url*</label><input type="text" id="url"><br>
+                    <label for="title">Title</label><input type="text" id="title"><br>
+
+                    <button class="button" value="add">Add</button>
                 </form>
             </div>
             <div id="Sites">
