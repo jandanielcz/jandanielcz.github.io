@@ -3,11 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <title>Start</title>
+        <script src="bower_components/js-md5/src/md5.js"></script>
         <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="media/style.css">
         <link rel="icon" href="media/home.png">
 
         <script>
+            var storage = 'localLinks';
+
             function enhanceUrl(url) {
 
                 var centerRegex = new RegExp('\/\/([A-Za-z0-9\.\_\-]*?)\/');
@@ -18,6 +21,46 @@
                 }
 
                 return url.replace(match[1], '<strong>' + match[1] + '</strong>');
+            }
+
+            function addItemStorage(categoryId, link){
+
+                var items = {};
+                if( localStorage.getItem( storage ) !== null ){
+                    items = JSON.parse( localStorage.getItem( storage ) );
+                }
+                if( typeof items[categoryId] === 'undefined'){
+                    items[categoryId] = [];
+                }
+                items[categoryId].push(link);
+                localStorage.setItem( storage, JSON.stringify(items) );
+            }
+
+            function addItem(categoryId, link, StoreVals){
+                if( StoreVals === true ){
+                    addItemStorage(categoryId, link);
+                }
+                var md5link = md5(link);
+                var htmlLink = '<a href="'+link+'"><img src="http://www.gravatar.com/avatar/'+md5link+'?d=retro"></a>';
+                $('#'+categoryId).append(htmlLink)
+                                 .find('a').attr('target', '_blank');
+            }
+
+            function loadLocals(){
+                var items = JSON.parse( localStorage.getItem( storage ) );
+                console.log(items);
+                for( var item in items ){
+                    if( items.hasOwnProperty(item) ){
+
+                        for( var link in items[item] ){
+                            if( items[item].hasOwnProperty( link )){
+                                console.log( [item, link]);
+                                addItem( item, items[item][link], false );
+                            }
+                        }
+                    }
+                }
+
             }
 
             function init(){
@@ -42,12 +85,42 @@
                     sitesBox.find('> div').each(function(){
                         $(this).append('<div class="status"></div>');
                     });
+
+
+                    sitesBox.find("> div").mouseenter( function(){
+                        console.log("ths");
+                            $(this).find('.status').html('<a class="addLocal"><img src="images/plus.png"></a>' );
+                    }).mouseleave( function(){
+                        $('.status').html('');
+                    });
+
                     sitesBox.on('mouseenter', 'a', function(){
                         $(this).closest('div').find('.status').html(enhanceUrl($(this).attr('href')));
                     });
                     sitesBox.on('mouseleave', 'a', function(){
-                        $('.status').html('');
+                        $(this).closest('div').trigger("mouseenter");
                     });
+
+                    sitesBox.on('click','.addLocal', function(){
+                        $('.newItem').removeClass('hidden');
+                        $('body').scrollTop();
+                        var category = $(this).closest('.category');
+                        console.log(category.attr("id"))  ;
+                        console.log(category.find('h3').html());
+                        $('.newItem h2 span').html(category.find('h3').html());
+                        $('.newItem').data('categoryId',category.attr("id"));
+
+                    });
+
+                    $(".newItem").on('click','button', function (e) {
+                        e.preventDefault();
+                        console.log($(this).closest("div").data('categoryId'));
+
+                        addItem($(this).closest("div").data('categoryId'),$(".newItem input").val(), true);
+                        $('.newItem').addClass('hidden');
+                    });
+                    loadLocals();
+
 
                 });
             }
@@ -56,9 +129,15 @@
     </head>
     <body>
         <div id="Wrapper">
+            <div class="newItem hidden">
+                <form onsubmit="false">
+                    <h2>New item for category: <span></span></h2>
+                    <input type="text"><button value="add">Add</button>
+                </form>
+            </div>
             <div id="Sites">
 
-                <div>
+                <div id="Hlavni" class="category">
                     <h3>Hlavní</h3>
                     <a href="https://inbox.google.com/u/0/">
                         <img src="images/inbox.png">
@@ -91,7 +170,7 @@
                         </a>
                     </span>
                 </div>
-                <div>
+                <div id="Novinky" class="category">
                     <h3>Novinky</h3>
                     <a href="http://www.lupa.cz/">
                         <img src="images/lupa.png">
@@ -118,7 +197,7 @@
                         </a>
                     </span>
                 </div>
-                <div>
+                <div id="Byznys" class="category">
                     <h3>Byznys</h3>
                     <a href="https://pracant.utio.cz/">
                         <img src="images/pracant.png">
@@ -142,7 +221,7 @@
                         <img src="images/wedos.png">
                     </a>
                 </div>
-                <div>
+                <div id="Penize" class="category">
                     <h3>Peníze</h3>
                     <a href="https://ob.sberbankcz.cz/VBCZIBS32/ControllerServlet">
                         <img src="images/sberbank.png">
@@ -151,12 +230,12 @@
                         <img src="images/airbank.png">
                     </a>
                 </div>
-                <div>
+                <div id="Dokumenty" class="category">
                     <h3>Dokumenty</h3>
                 </div>
 
-            </div>
 
+            </div>
         </div>
     </body>
 </html>
